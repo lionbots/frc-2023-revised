@@ -21,8 +21,11 @@
 
 ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{0};
 ctre::phoenix::motorcontrol::can::WPI_TalonSRX FLMotor{1};
-ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{2};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX BRMotor{2};
 ctre::phoenix::motorcontrol::can::WPI_TalonSRX BLMotor{3};
+
+frc::MotorControllerGroup lMotorGroup(FLMotor,BLMotor);
+frc::MotorControllerGroup rMotorGroup(FRMotor,BRMotor);
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
