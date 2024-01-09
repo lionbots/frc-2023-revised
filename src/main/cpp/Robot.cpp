@@ -82,7 +82,42 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {}
 
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+  // Left trigger
+  double LTrigger = driveController.GetLeftTriggerAxis();
+  // Right trigger
+  double RTrigger = driveController.GetRightTriggerAxis();
+  // Right joystick
+  double RJoystick = driveController.GetRightX();
+  // Right bumper
+  bool RBumper = driveController.GetRightBumper();
+
+  // Foward to the right & left
+  if (RTrigger > 0 && (RJoystick > 0.05 || RJoystick < -0.05))
+  {
+    m_drive.ArcadeDrive(RTrigger, RJoystick, true);
+  }
+  // Backwards to the left & right
+  else if (LTrigger > 0 && (RJoystick > 0.05 || RJoystick < -0.05))
+  {
+    m_drive.ArcadeDrive(LTrigger * -1, RJoystick, true);
+  }
+  // Forwards
+  else if (RTrigger > 0)
+  {
+    m_drive.ArcadeDrive(RTrigger, 0, true);
+  }
+  // Backwards
+  else if (LTrigger > 0)
+  {
+    m_drive.ArcadeDrive(LTrigger * -1, 0, true);
+  }
+  // Still
+  else
+  {
+    m_drive.ArcadeDrive(0, 0, true);
+  }
+}
 
 void Robot::DisabledInit() {}
 
