@@ -27,6 +27,8 @@ ctre::phoenix::motorcontrol::can::WPI_TalonSRX BLMotor{3};
 frc::MotorControllerGroup lMotorGroup(FLMotor,BLMotor);
 frc::MotorControllerGroup rMotorGroup(FRMotor,BRMotor);
 
+frc::DifferentialDrive m_drive{lMotorGroup, rMotorGroup}; 
+
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
