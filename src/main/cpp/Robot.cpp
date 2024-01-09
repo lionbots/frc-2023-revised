@@ -19,6 +19,11 @@
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
 
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{0};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX FLMotor{1};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{2};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX BLMotor{3};
+
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
