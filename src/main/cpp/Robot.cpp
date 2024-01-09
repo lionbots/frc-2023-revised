@@ -6,6 +6,18 @@
 
 #include <fmt/core.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+//For the Xbox Controller
+#include <frc/XboxController.h>
+//For the motors
+#include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
+//For the motor controllers
+#include <frc/motorcontrol/MotorControllerGroup.h>
+//For differential drive
+#include <frc/drive/DifferentialDrive.h>
+#include <thread>
+//For the kicker of motor controller
+#include <rev/CANSparkMax.h>
+#include <rev/CANSparkMaxLowLevel.h>
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
