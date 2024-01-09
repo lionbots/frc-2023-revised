@@ -29,6 +29,9 @@ frc::MotorControllerGroup rMotorGroup(FRMotor,BRMotor);
 
 frc::DifferentialDrive m_drive{lMotorGroup, rMotorGroup}; 
 
+// Drive controller
+frc::XboxController driveController{4};
+
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
