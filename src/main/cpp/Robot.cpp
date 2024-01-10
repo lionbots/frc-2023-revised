@@ -6,6 +6,31 @@
 
 #include <fmt/core.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+//For the Xbox Controller
+#include <frc/XboxController.h>
+//For the motors
+#include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
+//For the motor controllers
+#include <frc/motorcontrol/MotorControllerGroup.h>
+//For differential drive
+#include <frc/drive/DifferentialDrive.h>
+#include <thread>
+//For the kicker of motor controller
+#include <rev/CANSparkMax.h>
+#include <rev/CANSparkMaxLowLevel.h>
+
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{0};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX FLMotor{1};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX BRMotor{2};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX BLMotor{3};
+
+frc::MotorControllerGroup lMotorGroup(FLMotor,BLMotor);
+frc::MotorControllerGroup rMotorGroup(FRMotor,BRMotor);
+
+frc::DifferentialDrive m_drive{lMotorGroup, rMotorGroup}; 
+
+// Drive controller
+frc::XboxController driveController{4};
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
@@ -57,7 +82,42 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {}
 
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+  // Left trigger
+  double LTrigger = driveController.GetLeftTriggerAxis();
+  // Right trigger
+  double RTrigger = driveController.GetRightTriggerAxis();
+  // Right joystick
+  double RJoystick = driveController.GetRightX();
+  // Right bumper
+  bool RBumper = driveController.GetRightBumper();
+
+  // Foward to the right & left
+  if (RTrigger > 0 && (RJoystick > 0.05 || RJoystick < -0.05))
+  {
+    m_drive.ArcadeDrive(RTrigger, RJoystick, true);
+  }
+  // Backwards to the left & right
+  else if (LTrigger > 0 && (RJoystick > 0.05 || RJoystick < -0.05))
+  {
+    m_drive.ArcadeDrive(LTrigger * -1, RJoystick, true);
+  }
+  // Forwards
+  else if (RTrigger > 0)
+  {
+    m_drive.ArcadeDrive(RTrigger, 0, true);
+  }
+  // Backwards
+  else if (LTrigger > 0)
+  {
+    m_drive.ArcadeDrive(LTrigger * -1, 0, true);
+  }
+  // Still
+  else
+  {
+    m_drive.ArcadeDrive(0, 0, true);
+  }
+}
 
 void Robot::DisabledInit() {}
 

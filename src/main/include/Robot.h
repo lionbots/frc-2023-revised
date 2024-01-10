@@ -9,6 +9,9 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 
+#include <cscore_oo.h>
+#include <cameraserver/CameraServer.h>
+
 class Robot : public frc::TimedRobot {
  public:
   void RobotInit() override;
