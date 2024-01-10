@@ -8,14 +8,15 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 //For the Xbox Controller
 #include <frc/XboxController.h>
-//For the motors
+//For the motor controllers, both for motor and arm
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
-//For the motor controllers
+//For grouping the left and right sides of the tank drive together
 #include <frc/motorcontrol/MotorControllerGroup.h>
 //For differential drive
 #include <frc/drive/DifferentialDrive.h>
+//Create a new thread for the cameras
 #include <thread>
-//For the kicker of motor controller
+//For the intake and scoring
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
 
@@ -36,6 +37,9 @@ void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
+
+  //Begin new thread for camera processing
+  std::jthread visionThread(VisionThread);
 }
 
 /**
