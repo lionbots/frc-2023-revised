@@ -20,18 +20,26 @@
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
 
+// Drive system
 ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{0};
 ctre::phoenix::motorcontrol::can::WPI_TalonSRX FLMotor{1};
-ctre::phoenix::motorcontrol::can::WPI_TalonSRX BRMotor{2};
-ctre::phoenix::motorcontrol::can::WPI_TalonSRX BLMotor{3};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX BRMotor{5};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX BLMotor{6};
 
 frc::MotorControllerGroup lMotorGroup(FLMotor,BLMotor);
 frc::MotorControllerGroup rMotorGroup(FRMotor,BRMotor);
 
 frc::DifferentialDrive m_drive{lMotorGroup, rMotorGroup}; 
 
+// Manipulator
+rev::CANSparkMax intakeL{2, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+rev::CANSparkMax intakeR{3, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX arm{4};
+double armSp = 0.0;
+
 // Drive controller
-frc::XboxController driveController{4};
+frc::XboxController driveController{1};
+frc::XboxController manipulatorController{2};
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
@@ -87,14 +95,19 @@ void Robot::AutonomousPeriodic() {
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
+  // Drive System
   // Left trigger
   double LTrigger = driveController.GetLeftTriggerAxis();
   // Right trigger
   double RTrigger = driveController.GetRightTriggerAxis();
   // Right joystick
   double RJoystick = driveController.GetRightX();
-  // Right bumper
-  bool RBumper = driveController.GetRightBumper();
+
+  // Manipulator Arm System
+  bool AButton = manipulatorController.GetAButton();
+  bool BButton = manipulatorController.GetBButton();
+  bool LBumper = manipulatorController.GetLeftBumper();
+  bool RBumper = manipulatorController.GetRightBumper();
 
   // Foward to the right & left
   if (RTrigger > 0 && (RJoystick > 0.05 || RJoystick < -0.05))
@@ -120,6 +133,39 @@ void Robot::TeleopPeriodic() {
   else
   {
     m_drive.ArcadeDrive(0, 0, true);
+  }
+
+  // Manipulator System
+  // Arm
+  if (AButton) {
+    if (armSp < 0.3) {
+        armSp += 0.005;
+        arm.Set(armSp);
+  
+      } else {
+        arm.Set(armSp);
+      }
+  } else if (BButton) {
+    if (armSp > -0.3) {
+        armSp -= 0.005;
+        arm.Set(armSp);
+  
+      } else {
+        arm.Set(armSp);
+      }
+  } else {
+    arm.Set(0);
+  }
+  // Grippers
+  if (RBumper) { //intake
+    intakeL.Set(-0.3);
+    intakeR.Set(0.3);
+  } else if (LBumper) { //outake
+    intakeL.Set(0.6);
+    intakeR.Set(-0.6);
+  } else {
+    intakeL.Set(-0.02);
+    intakeR.Set(0.02);
   }
 }
 
