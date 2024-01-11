@@ -21,10 +21,10 @@
 #include <rev/CANSparkMaxLowLevel.h>
 
 // Drive system
-ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{0};
-ctre::phoenix::motorcontrol::can::WPI_TalonSRX FLMotor{1};
-ctre::phoenix::motorcontrol::can::WPI_TalonSRX BRMotor{5};
-ctre::phoenix::motorcontrol::can::WPI_TalonSRX BLMotor{6};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{4};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX FLMotor{0};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX BRMotor{3};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX BLMotor{1};
 
 frc::MotorControllerGroup lMotorGroup(FLMotor,BLMotor);
 frc::MotorControllerGroup rMotorGroup(FRMotor,BRMotor);
@@ -32,9 +32,9 @@ frc::MotorControllerGroup rMotorGroup(FRMotor,BRMotor);
 frc::DifferentialDrive m_drive{lMotorGroup, rMotorGroup}; 
 
 // Manipulator
-rev::CANSparkMax intakeL{2, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
-rev::CANSparkMax intakeR{3, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
-ctre::phoenix::motorcontrol::can::WPI_TalonSRX arm{4};
+rev::CANSparkMax intakeL{5, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+rev::CANSparkMax intakeR{6, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+ctre::phoenix::motorcontrol::can::WPI_TalonSRX arm{2};
 double armSp = 0.0;
 
 // Drive controller
@@ -158,14 +158,14 @@ void Robot::TeleopPeriodic() {
   }
   // Grippers
   if (RBumper) { //intake
-    intakeL.Set(-0.3);
-    intakeR.Set(0.3);
+    intakeL.Set(0.3);
+    intakeR.Set(-0.3);
   } else if (LBumper) { //outake
-    intakeL.Set(0.6);
-    intakeR.Set(-0.6);
+    intakeL.Set(-0.6);
+    intakeR.Set(0.6);
   } else {
-    intakeL.Set(-0.02);
-    intakeR.Set(0.02);
+    intakeL.Set(0.02);
+    intakeR.Set(-0.02);
   }
 }
 
