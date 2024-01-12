@@ -123,7 +123,7 @@ void Robot::TeleopPeriodic() {
 
   // Manipulator Arm System
   /* RELEASE ARM - #5*/ bool joyButtonFive = joystickController.GetRawButton(5);
-  /* RETRACT ARM - #10*/ bool joyButtonFive = joystickController.GetRawButton(10);
+  /* RETRACT ARM - #10*/ bool joyButtonTen = joystickController.GetRawButton(10);
   /* INTAKE      - #2*/ bool joyButtonTwo = joystickController.GetRawButton(2);
   /* EJECT       - #1*/ bool joyButtonOne = joystickController.GetRawButton(1);
   /* MAX EJECT   - #3*/ bool joyButtonThree = joystickController.GetRawButton(3);
