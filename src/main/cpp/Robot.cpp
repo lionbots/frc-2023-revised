@@ -128,39 +128,46 @@ void Robot::TeleopPeriodic() {
   /* EJECT       - #1*/ bool joyButtonOne = joystickController.GetRawButton(1);
   /* MAX EJECT   - #3*/ bool joyButtonThree = joystickController.GetRawButton(3);
 
-  // PRO CONTROL SCHEME
-  // Drive System
-  // Foward to the right & left
-  if (driveRTrigger > 0 && (driveLJoystick > 0.05 || driveLJoystick < -0.05)) {
-    m_drive.ArcadeDrive(driveLJoystick, driveRTrigger * 0.7, true);
+  //DRIVE SYSTEM
+  if (!(joyZAxis > 0.05 || joyZAxis < 0.05 || joyYAxis > 0.05 || joyYAxis < 0.)) {
+    // PRO CONTROL SCHEME
+    // Drive System
+    // Foward to the right & left
+    if (driveRTrigger > 0 && (driveLJoystick > 0.05 || driveLJoystick < -0.05)) {
+      m_drive.ArcadeDrive(driveLJoystick, driveRTrigger * 0.7, true);
+    }
+    // Backwards to the left & right
+    else if (driveLTrigger > 0 && (driveLJoystick > 0.05 || driveLJoystick < -0.05)) {
+      m_drive.ArcadeDrive(driveLJoystick, driveLTrigger * -0.7, true);
+    }
+    // Forwards
+    else if (driveRTrigger > 0) {
+      m_drive.ArcadeDrive(0, driveRTrigger, true);
+    }
+    // Backwards
+    else if (driveLTrigger > 0) {
+      m_drive.ArcadeDrive(0, driveLTrigger * -1, true);
+    }
+    // Still
+    else {
+      m_drive.ArcadeDrive(0, 0, true);
   }
-  // Backwards to the left & right
-  else if (driveLTrigger > 0 && (driveLJoystick > 0.05 || driveLJoystick < -0.05)) {
-    m_drive.ArcadeDrive(driveLJoystick, driveLTrigger * -0.7, true);
-  }
-  // Forwards
-  else if (driveRTrigger > 0) {
-    m_drive.ArcadeDrive(0, driveRTrigger, true);
-  }
-  // Backwards
-  else if (driveLTrigger > 0) {
-    m_drive.ArcadeDrive(0, driveLTrigger * -1, true);
-  }
-  // Still
-  else {
-    m_drive.ArcadeDrive(0, 0, true);
+  } else {
+    // JOYSTICK CONTROLS
+    // Drive System
+    m_drive.ArcadeDrive(joyZAxis * -0.7, joyYAxis, true);
   }
 
   // Manipulator System
   // Arm
-  if (manipAButton) {
+  if (manipAButton || joyButtonFive) {
     if (armSp < 0.3) {
         armSp += 0.005;
         arm.Set(armSp);
       } else {
         arm.Set(armSp);
       }
-  } else if (manipBButton) {
+  } else if (manipBButton || joyButtonThree) {
     if (armSp > -0.3) {
         armSp -= 0.005;
         arm.Set(armSp);
@@ -171,57 +178,26 @@ void Robot::TeleopPeriodic() {
     arm.Set(0);
   }
   // Grippers
-  if (manipRBumper) { //eject
+  if (manipRBumper || joyButtonOne) { //eject
     intakeL.Set(0.7);
     intakeR.Set(-0.7);
-  } else if (manipLBumper) { //intake
+  } else if (manipLBumper || joyButtonTwo) { //intake
     intakeL.Set(-0.3);
     intakeR.Set(0.3);
-  } else if (manipRTrigger > 0.2) { //max eject
-    intakeL.Set(manipRTrigger);
-    intakeR.Set(manipRTrigger * -1);
+  } else if (manipRTrigger > 0.2 || joyButtonThree) { //max eject
+    int manipEjectSpeed = manipRTrigger;
+    int joyEjectSpeed = joyButtonThree ? 1 : 0;
+    if (manipEjectSpeed > joyButtonThree) {
+      intakeL.Set(manipRTrigger);
+      intakeR.Set(manipRTrigger * -1);
+    } else {
+      intakeL.Set(1);
+      intakeR.Set(-1);
+    }
   } else {
     intakeL.Set(-0.02);
     intakeR.Set(0.02);
   }
-
-  // JOYSTICK CONTROLS
-  // Drive System
-  m_drive.ArcadeDrive(joyZAxis * 0.7, joyYAxis, true);
-
-  // Manipulator System
-  if (joyButtonFive) {
-    if (armSp < 0.3) {
-        armSp += 0.005;
-        arm.Set(armSp);
-      } else {
-        arm.Set(armSp);
-      }
-  } else if (joyButtonTen) {
-    if (armSp > -0.3) {
-        armSp -= 0.005;
-        arm.Set(armSp);
-      } else {
-        arm.Set(armSp);
-      }
-  } else {
-    arm.Set(0);
-  }
-  // Grippers
-  if (joyButtonOne) { //eject
-    intakeL.Set(0.7);
-    intakeR.Set(-0.7);
-  } else if (joyButtonTwo) { //intake
-    intakeL.Set(-0.3);
-    intakeR.Set(0.3);
-  } else if (joyButtonThree > 0.2) { // max eject
-    intakeL.Set(1);
-    intakeR.Set(-1);
-  } else {
-    intakeL.Set(-0.02);
-    intakeR.Set(0.02);
-  }
-
 }
 
 void Robot::DisabledInit() {}
