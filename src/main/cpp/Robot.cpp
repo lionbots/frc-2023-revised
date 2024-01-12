@@ -10,6 +10,7 @@
 #include <frc/XboxController.h>
 //For regular Joystick
 #include <frc/Joystick.h>
+//#include <frc/GenericHID.h>
 //For the motor controllers, both for motor and arm
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
 //For grouping the left and right sides of the tank drive together
@@ -39,9 +40,10 @@ rev::CANSparkMax intakeR{6, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
 ctre::phoenix::motorcontrol::can::WPI_TalonSRX arm{2};
 double armSp = 0.0;
 
-// Drive controller
-frc::Joystick thrustmasterController{0};
+// Basic controls
+frc::Joystick joystickController{0};
 
+// Pro controls
 frc::XboxController driveController{1};
 frc::XboxController manipulatorController{2};
 
@@ -99,18 +101,35 @@ void Robot::AutonomousPeriodic() {
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
+  // CONTROL DEFINITION
+  
+  // PRO CONTROLS
   // Drive System
   /* GO BACK    - L2 */double driveLTrigger = driveController.GetLeftTriggerAxis();
   /* GO FORWARD - R2*/double driveRTrigger = driveController.GetRightTriggerAxis();
   /* DIRECTION  - L STICK*/double driveLJoystick = driveController.GetLeftX();
 
   // Manipulator Arm System
-  /* LIFT ARM UP - A*/bool manipAButton = manipulatorController.GetAButton();
+  /* RELEASE ARM - A*/bool manipAButton = manipulatorController.GetAButton();
   /* RETRACT ARM - B*/bool manipBButton = manipulatorController.GetBButton();
   /* INTAKE      - L1*/bool manipLBumper = manipulatorController.GetLeftBumper();
-  /* OUTTAKE     - R1*/bool manipRBumper = manipulatorController.GetRightBumper();
-  /* MAX OUTTAKE - R1*/double manipRTrigger = manipulatorController.GetRightTriggerAxis();
+  /* EJECT       - R1*/bool manipRBumper = manipulatorController.GetRightBumper();
+  /* MAX EJECT   - R1*/double manipRTrigger = manipulatorController.GetRightTriggerAxis();
 
+  // JOYSTICK CONTROLS
+  // Drive System
+  /* Forward and Backwards - Y AXIS*/ double joyYAxis = joystickController.GetY();
+  /* Turning               - Z AXIS*/ double joyZAxis = joystickController.GetZ();
+
+  // Manipulator Arm System
+  /* RELEASE ARM - #5*/ bool joyButtonFive = joystickController.GetRawButton(5);
+  /* RETRACT ARM - #10*/ bool joyButtonFive = joystickController.GetRawButton(10);
+  /* INTAKE      - #2*/ bool joyButtonTwo = joystickController.GetRawButton(2);
+  /* EJECT       - #1*/ bool joyButtonOne = joystickController.GetRawButton(1);
+  /* MAX EJECT   - #3*/ bool joyButtonThree = joystickController.GetRawButton(3);
+
+  // PRO CONTROL SCHEME
+  // Drive System
   // Foward to the right & left
   if (driveRTrigger > 0 && (driveLJoystick > 0.05 || driveLJoystick < -0.05)) {
     m_drive.ArcadeDrive(driveLJoystick, driveRTrigger * 0.7, true);
@@ -152,7 +171,7 @@ void Robot::TeleopPeriodic() {
     arm.Set(0);
   }
   // Grippers
-  if (manipRBumper) { //outtake
+  if (manipRBumper) { //eject
     intakeL.Set(0.7);
     intakeR.Set(-0.7);
   } else if (manipLBumper) { //intake
@@ -165,6 +184,11 @@ void Robot::TeleopPeriodic() {
     intakeL.Set(-0.02);
     intakeR.Set(0.02);
   }
+
+  // JOYSTICK CONTROLS
+  // Drive System
+  m_drive.ArcadeDrive(joyZAxis * 0.7, joyYAxis, true);
+
 }
 
 void Robot::DisabledInit() {}
