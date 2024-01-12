@@ -112,22 +112,22 @@ void Robot::TeleopPeriodic() {
   // Foward to the right & left
   if (RTrigger > 0 && (RJoystick > 0.05 || RJoystick < -0.05))
   {
-    m_drive.ArcadeDrive(RTrigger, RJoystick, true);
+    m_drive.ArcadeDrive(RJoystick, RTrigger, true);
   }
   // Backwards to the left & right
   else if (LTrigger > 0 && (RJoystick > 0.05 || RJoystick < -0.05))
   {
-    m_drive.ArcadeDrive(LTrigger * -1, RJoystick, true);
+    m_drive.ArcadeDrive(RJoystick, LTrigger * -1, true);
   }
   // Forwards
   else if (RTrigger > 0)
   {
-    m_drive.ArcadeDrive(RTrigger, 0, true);
+    m_drive.ArcadeDrive(0, RTrigger, true);
   }
   // Backwards
   else if (LTrigger > 0)
   {
-    m_drive.ArcadeDrive(LTrigger * -1, 0, true);
+    m_drive.ArcadeDrive(0, LTrigger * -1, true);
   }
   // Still
   else
