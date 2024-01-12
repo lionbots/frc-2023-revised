@@ -177,7 +177,7 @@ void Robot::TeleopPeriodic() {
   } else if (manipLBumper) { //intake
     intakeL.Set(-0.3);
     intakeR.Set(0.3);
-  } else if (manipRTrigger > 0.2) {
+  } else if (manipRTrigger > 0.2) { //max eject
     intakeL.Set(manipRTrigger);
     intakeR.Set(manipRTrigger * -1);
   } else {
@@ -188,6 +188,39 @@ void Robot::TeleopPeriodic() {
   // JOYSTICK CONTROLS
   // Drive System
   m_drive.ArcadeDrive(joyZAxis * 0.7, joyYAxis, true);
+
+  // Manipulator System
+  if (joyButtonFive) {
+    if (armSp < 0.3) {
+        armSp += 0.005;
+        arm.Set(armSp);
+      } else {
+        arm.Set(armSp);
+      }
+  } else if (joyButtonTen) {
+    if (armSp > -0.3) {
+        armSp -= 0.005;
+        arm.Set(armSp);
+      } else {
+        arm.Set(armSp);
+      }
+  } else {
+    arm.Set(0);
+  }
+  // Grippers
+  if (joyButtonOne) { //eject
+    intakeL.Set(0.7);
+    intakeR.Set(-0.7);
+  } else if (joyButtonTwo) { //intake
+    intakeL.Set(-0.3);
+    intakeR.Set(0.3);
+  } else if (joyButtonThree > 0.2) { // max eject
+    intakeL.Set(1);
+    intakeR.Set(-1);
+  } else {
+    intakeL.Set(-0.02);
+    intakeR.Set(0.02);
+  }
 
 }
 
