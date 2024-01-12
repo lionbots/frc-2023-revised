@@ -96,60 +96,51 @@ void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
   // Drive System
-  // Left trigger
-  double LTrigger = driveController.GetLeftTriggerAxis();
-  // Right trigger
-  double RTrigger = driveController.GetRightTriggerAxis();
-  // Right joystick
-  double RJoystick = driveController.GetRightX();
+  /* GO BACK    - L2 */double driveLTrigger = driveController.GetLeftTriggerAxis();
+  /* GO FORWARD - R2*/double driveRTrigger = driveController.GetRightTriggerAxis();
+  /* DIRECTION  - L STICK*/double driveLJoystick = driveController.GetLeftX();
 
   // Manipulator Arm System
-  bool AButton = manipulatorController.GetAButton();
-  bool BButton = manipulatorController.GetBButton();
-  bool LBumper = manipulatorController.GetLeftBumper();
-  bool RBumper = manipulatorController.GetRightBumper();
+  /* LIFT ARM UP - A*/bool manipAButton = manipulatorController.GetAButton();
+  /* RETRACT ARM - B*/bool manipBButton = manipulatorController.GetBButton();
+  /* INTAKE      - L1*/bool manipLBumper = manipulatorController.GetLeftBumper();
+  /* OUTTAKE     - R1*/bool manipRBumper = manipulatorController.GetRightBumper();
+  /* MAX OUTTAKE - R1*/double manipRTrigger = manipulatorController.GetRightTriggerAxis();
 
   // Foward to the right & left
-  if (RTrigger > 0 && (RJoystick > 0.05 || RJoystick < -0.05))
-  {
-    m_drive.ArcadeDrive(RJoystick, RTrigger, true);
+  if (driveRTrigger > 0 && (driveLJoystick > 0.05 || driveLJoystick < -0.05)) {
+    m_drive.ArcadeDrive(driveLJoystick, driveRTrigger, true);
   }
   // Backwards to the left & right
-  else if (LTrigger > 0 && (RJoystick > 0.05 || RJoystick < -0.05))
-  {
-    m_drive.ArcadeDrive(RJoystick, LTrigger * -1, true);
+  else if (driveLTrigger > 0 && (driveLJoystick > 0.05 || driveLJoystick < -0.05)) {
+    m_drive.ArcadeDrive(driveLJoystick, driveLTrigger * -1, true);
   }
   // Forwards
-  else if (RTrigger > 0)
-  {
-    m_drive.ArcadeDrive(0, RTrigger, true);
+  else if (driveRTrigger > 0) {
+    m_drive.ArcadeDrive(0, driveRTrigger, true);
   }
   // Backwards
-  else if (LTrigger > 0)
-  {
-    m_drive.ArcadeDrive(0, LTrigger * -1, true);
+  else if (driveLTrigger > 0) {
+    m_drive.ArcadeDrive(0, driveLTrigger * -1, true);
   }
   // Still
-  else
-  {
+  else {
     m_drive.ArcadeDrive(0, 0, true);
   }
 
   // Manipulator System
   // Arm
-  if (AButton) {
+  if (manipAButton) {
     if (armSp < 0.3) {
         armSp += 0.005;
         arm.Set(armSp);
-  
       } else {
         arm.Set(armSp);
       }
-  } else if (BButton) {
+  } else if (manipBButton) {
     if (armSp > -0.3) {
         armSp -= 0.005;
         arm.Set(armSp);
-  
       } else {
         arm.Set(armSp);
       }
@@ -157,15 +148,18 @@ void Robot::TeleopPeriodic() {
     arm.Set(0);
   }
   // Grippers
-  if (RBumper) { //intake
-    intakeL.Set(0.3);
-    intakeR.Set(-0.3);
-  } else if (LBumper) { //outake
-    intakeL.Set(-0.6);
-    intakeR.Set(0.6);
+  if (manipRBumper) { //outtake
+    intakeL.Set(0.7);
+    intakeR.Set(-0.7);
+  } else if (manipLBumper) { //intake
+    intakeL.Set(-0.3);
+    intakeR.Set(0.3);
+  } else if (manipRTrigger > 0.2) {
+    intakeL.Set(manipRTrigger);
+    intakeR.Set(manipRTrigger * -1);
   } else {
-    intakeL.Set(0.02);
-    intakeR.Set(-0.02);
+    intakeL.Set(-0.02);
+    intakeR.Set(0.02);
   }
 }
 
