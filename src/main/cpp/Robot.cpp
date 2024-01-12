@@ -113,11 +113,11 @@ void Robot::TeleopPeriodic() {
 
   // Foward to the right & left
   if (driveRTrigger > 0 && (driveLJoystick > 0.05 || driveLJoystick < -0.05)) {
-    m_drive.ArcadeDrive(driveLJoystick, driveRTrigger, true);
+    m_drive.ArcadeDrive(driveLJoystick, driveRTrigger * 0.7, true);
   }
   // Backwards to the left & right
   else if (driveLTrigger > 0 && (driveLJoystick > 0.05 || driveLJoystick < -0.05)) {
-    m_drive.ArcadeDrive(driveLJoystick, driveLTrigger * -1, true);
+    m_drive.ArcadeDrive(driveLJoystick, driveLTrigger * -0.7, true);
   }
   // Forwards
   else if (driveRTrigger > 0) {
