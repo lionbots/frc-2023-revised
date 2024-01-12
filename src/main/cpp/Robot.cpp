@@ -8,6 +8,8 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 //For the Xbox Controller
 #include <frc/XboxController.h>
+//For regular Joystick
+#include <frc/Joystick.h>
 //For the motor controllers, both for motor and arm
 #include <ctre/phoenix/motorcontrol/can/WPI_TalonSRX.h>
 //For grouping the left and right sides of the tank drive together
@@ -38,6 +40,8 @@ ctre::phoenix::motorcontrol::can::WPI_TalonSRX arm{2};
 double armSp = 0.0;
 
 // Drive controller
+frc::Joystick thrustmasterController{0};
+
 frc::XboxController driveController{1};
 frc::XboxController manipulatorController{2};
 
