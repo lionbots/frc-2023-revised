@@ -206,7 +206,9 @@ void Robot::TeleopPeriodic() {
     intakeR.Set(0.02);
   }
 
-
+  // IMU
+  /* Acceleration X-Axis */ units::feet_per_second_squared_t accelerationX = imu.GetAccelX();
+  /* Acceleration Y-Axis */ units::feet_per_second_squared_t accelerationY = imu.GetAccelX();
 }
 
 void Robot::DisabledInit() {}
