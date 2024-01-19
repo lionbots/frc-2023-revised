@@ -22,6 +22,8 @@
 //For the intake and scoring
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
+//For the IMU
+#include <frc/ADIS16470_IMU.h>
 
 // Drive system
 ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{4};
@@ -46,6 +48,9 @@ frc::Joystick joystickController{0};
 // Pro controls
 frc::XboxController driveController{1};
 frc::XboxController manipulatorController{2};
+
+//IMU
+frc::ADIS16470_IMU imu{};
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
