@@ -154,8 +154,10 @@ void Robot::TeleopPeriodic() {
 
   //Increases ticks by 1 every 20ms
   ticks++;
+  //Every 10 ticks it will print acceleration, velocity, and position and resets ticks
   if(ticks == 10) {
-    fmt::print("[{}, {}, {}, {}, {}, {}]", accelerationX, accelerationY, velocityX, velocityY, positionX, positionY);
+    fmt::print("[{}, {}, {}, {}, {}, {}]\n", accelerationX, accelerationY, velocityX, velocityY, positionX, positionY);
+    ticks = 0;
   }
 
   //DRIVE SYSTEM
