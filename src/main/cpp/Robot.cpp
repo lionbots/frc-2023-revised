@@ -22,6 +22,8 @@
 //For the intake and scoring
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
+//Chrono
+#include <chrono>
 
 // Drive system
 ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{4};
