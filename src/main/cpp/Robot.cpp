@@ -6,6 +6,7 @@
 
 #include <fmt/core.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <fmt/format.h>
 //For the Xbox Controller
 #include <frc/XboxController.h>
 //For regular Joystick
@@ -59,6 +60,7 @@ frc::ADIS16470_IMU imu{};
 /* Velocty Y-Axis */ double velocityY = velocityY + accelerationY;
 /* Position X-Axis */ double positionX = positionX + velocityX;
 /* Position Y-Axis */ double positionY = positionY + velocityY;
+/* Ticks since last print */ int ticks = 0;
 
 
 void Robot::RobotInit() {
@@ -149,6 +151,12 @@ void Robot::TeleopPeriodic() {
   /* Velocty Y-Axis */ velocityY = velocityY + accelerationY;
   /* Position X-Axis */ positionX = positionX + velocityX;
   /* Position Y-Axis */ positionY = positionY + velocityY;
+
+  //Increases ticks by 1 every 20ms
+  ticks++;
+  if(ticks == 10) {
+    fmt::print("[{}, {}, {}, {}, {}, {}]", accelerationX, accelerationY, velocityX, velocityY, positionX, positionY);
+  }
 
   //DRIVE SYSTEM
   if (!(joyZAxis > 0.05 || joyZAxis < 0.05 || joyYAxis > 0.05 || joyYAxis < 0.)) {
