@@ -53,6 +53,13 @@ frc::XboxController manipulatorController{2};
 
 //IMU
 frc::ADIS16470_IMU imu{};
+/* Acceleration X-Axis */ double accelerationX = imu.GetAccelX().value() * 3.280839895;
+/* Acceleration Y-Axis */ double accelerationY = imu.GetAccelY().value() * 3.280839895;
+/* Velocity X-Axis */ double velocityX = velocityX + accelerationX;
+/* Velocty Y-Axis */ double velocityY = velocityY + accelerationY;
+/* Position X-Axis */ double positionX = positionX + velocityX;
+/* Position Y-Axis */ double positionY = positionY + velocityY;
+
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
@@ -205,10 +212,6 @@ void Robot::TeleopPeriodic() {
     intakeL.Set(-0.02);
     intakeR.Set(0.02);
   }
-
-  // IMU
-  /* Acceleration X-Axis */ units::feet_per_second_squared_t accelerationX = imu.GetAccelX();
-  /* Acceleration Y-Axis */ units::feet_per_second_squared_t accelerationY = imu.GetAccelX();
 }
 
 void Robot::DisabledInit() {}
