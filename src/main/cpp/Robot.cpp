@@ -142,6 +142,14 @@ void Robot::TeleopPeriodic() {
   /* EJECT       - #1*/ bool joyButtonOne = joystickController.GetRawButton(1);
   /* MAX EJECT   - #3*/ bool joyButtonThree = joystickController.GetRawButton(3);
 
+  //IMU
+  /* Acceleration X-Axis */ accelerationX = imu.GetAccelX().value() * 3.280839895;
+  /* Acceleration Y-Axis */ accelerationY = imu.GetAccelY().value() * 3.280839895;
+  /* Velocity X-Axis */ velocityX = velocityX + accelerationX;
+  /* Velocty Y-Axis */ velocityY = velocityY + accelerationY;
+  /* Position X-Axis */ positionX = positionX + velocityX;
+  /* Position Y-Axis */ positionY = positionY + velocityY;
+
   //DRIVE SYSTEM
   if (!(joyZAxis > 0.05 || joyZAxis < 0.05 || joyYAxis > 0.05 || joyYAxis < 0.)) {
     // PRO CONTROL SCHEME
