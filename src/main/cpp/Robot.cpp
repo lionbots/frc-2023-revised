@@ -129,7 +129,7 @@ void Robot::TeleopPeriodic() {
   /* MAX EJECT   - #3*/ bool joyButtonThree = joystickController.GetRawButton(3);
 
   //DRIVE SYSTEM
-  if (!(joyZAxis > 0.05 || joyZAxis < 0.05 || joyYAxis > 0.05 || joyYAxis < 0.)) {
+  if (joyZAxis == 0 && joyZAxis == 0) {
     // PRO CONTROL SCHEME
     // Drive System
     // Foward to the right & left
@@ -162,15 +162,15 @@ void Robot::TeleopPeriodic() {
   // Arm
   if (manipAButton || joyButtonFive) {
     if (armSp < 0.3) {
-        armSp += 0.005;
+        armSp +=0.005;
         arm.Set(armSp);
       } else {
         arm.Set(armSp);
       }
-  } else if (manipBButton || joyButtonThree) {
+  } else if (manipBButton || joyButtonTen) {
     if (armSp > -0.3) {
         armSp -= 0.005;
-        arm.Set(armSp);
+        arm.Set(armSp); 
       } else {
         arm.Set(armSp);
       }
