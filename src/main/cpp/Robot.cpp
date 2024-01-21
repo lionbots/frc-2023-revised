@@ -22,6 +22,8 @@
 //For the intake and scoring
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
+//Chrono
+#include <chrono>
 
 // Drive system
 ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{4};
@@ -46,6 +48,9 @@ frc::Joystick joystickController{0};
 // Pro controls
 frc::XboxController driveController{1};
 frc::XboxController manipulatorController{2};
+
+// Clock
+auto begin = std::chrono::high_resolution_clock::now();
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
@@ -127,6 +132,15 @@ void Robot::TeleopPeriodic() {
   /* INTAKE      - #2*/ bool joyButtonTwo = joystickController.GetRawButton(2);
   /* EJECT       - #1*/ bool joyButtonOne = joystickController.GetRawButton(1);
   /* MAX EJECT   - #3*/ bool joyButtonThree = joystickController.GetRawButton(3);
+
+  // End clock
+  auto end = std::chrono::high_resolution_clock::now();
+  // New beginning time
+  begin = end;
+  // Delta Time
+  auto deltaTime = end - begin;
+  // Print delta time
+  fmt::print("Delta Time: {}\n", deltaTime);
 
   //DRIVE SYSTEM
   if (joyZAxis == 0 && joyZAxis == 0) {
