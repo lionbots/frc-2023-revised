@@ -138,7 +138,7 @@ void Robot::TeleopPeriodic() {
   // Difference in time
   auto difference = end - begin;
   // Delta Time
-  auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count();
+  auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
   // New beginning time
   begin = end;
   // Print delta time
