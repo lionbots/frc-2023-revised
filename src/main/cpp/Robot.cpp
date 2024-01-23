@@ -39,7 +39,7 @@ ctre::phoenix::motorcontrol::can::WPI_TalonSRX BLMotor{1};
 frc::MotorControllerGroup lMotorGroup(FLMotor,BLMotor);
 frc::MotorControllerGroup rMotorGroup(FRMotor,BRMotor);
 
-frc::DifferentialDrive m_drive{lMotorGroup, rMotorGroup}; 
+frc::DifferentialDrive m_drive{lMotorGroup, rMotorGroup};
 
 // Manipulator
 rev::CANSparkMax intakeL{5, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
@@ -132,7 +132,7 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
   // CONTROL DEFINITION
-  
+
   // PRO CONTROLS
   // Drive System
   /* GO BACK    - L2 */double driveLTrigger = driveController.GetLeftTriggerAxis();
@@ -171,7 +171,7 @@ void Robot::TeleopPeriodic() {
 
   //IMU
   /* Acceleration X-Axis */ accelerationX = imu.GetAccelX().value() * deltaTime;
-  /* Acceleration Y-Axis */ accelerationY = imu.GetAccelZ().value() * deltaTime;
+  /* Acceleration Y-Axis */ accelerationY = imu.GetAccelY().value() * deltaTime;
   /* Velocity X-Axis */ velocityX = velocityX + accelerationX;
   /* Velocty Y-Axis */ velocityY = velocityY + accelerationY;
   /* Position X-Axis */ positionX = positionX + velocityX;
@@ -180,10 +180,10 @@ void Robot::TeleopPeriodic() {
   //Increases ticks by 1 every 20ms
   ticks++;
   //Every 10 ticks it will print acceleration, velocity, and position and resets ticks
-  //if(ticks == 0) {
+  if(ticks == 0) {
     fmt::print("[{}, {}, {}, {}, {}, {}]\n", accelerationX, accelerationY, velocityX, velocityY, positionX, positionY);
-  //  ticks = 0;
-  //}
+    ticks = 0;
+  }
 
   //DRIVE SYSTEM
   if (joyZAxis == 0 && joyZAxis == 0) {
@@ -227,7 +227,7 @@ void Robot::TeleopPeriodic() {
   } else if (manipBButton || joyButtonTen) {
     if (armSp > -0.3) {
         armSp -= 0.005;
-        arm.Set(armSp); 
+        arm.Set(armSp);
       } else {
         arm.Set(armSp);
       }
