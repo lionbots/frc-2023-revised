@@ -56,11 +56,17 @@ frc::XboxController manipulatorController{2};
 
 // Clock
 auto begin = std::chrono::high_resolution_clock::now();
+// End clock
+auto end = std::chrono::high_resolution_clock::now();
+// Difference in time
+auto difference = end - begin;
+// Delta Time
+auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
 
 //IMU
 frc::ADIS16470_IMU imu{};
-/* Acceleration X-Axis */ double accelerationX = imu.GetAccelX().value() * 3.280839895;
-/* Acceleration Y-Axis */ double accelerationY = imu.GetAccelY().value() * 3.280839895;
+/* Acceleration X-Axis */ double accelerationX = imu.GetAccelX().value() * deltaTime;
+/* Acceleration Y-Axis */ double accelerationY = imu.GetAccelY().value() * deltaTime;
 /* Velocity X-Axis */ double velocityX = velocityX + accelerationX;
 /* Velocty Y-Axis */ double velocityY = velocityY + accelerationY;
 /* Position X-Axis */ double positionX = positionX + velocityX;
@@ -150,19 +156,19 @@ void Robot::TeleopPeriodic() {
   /* MAX EJECT   - #3*/ bool joyButtonThree = joystickController.GetRawButton(3);
 
   // End clock
-  auto end = std::chrono::high_resolution_clock::now();
+  end = std::chrono::high_resolution_clock::now();
   // Difference in time
-  auto difference = end - begin;
+  difference = end - begin;
   // Delta Time
-  auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
+  deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
   // New beginning time
   begin = end;
   // Print delta time
   //fmt::print("Delta Time: {}\n", deltaTime);
 
   //IMU
-  /* Acceleration X-Axis */ accelerationX = imu.GetAccelX().value() * 3.280839895;
-  /* Acceleration Y-Axis */ accelerationY = imu.GetAccelY().value() * 3.280839895;
+  /* Acceleration X-Axis */ accelerationX = imu.GetAccelX().value() * deltaTime;
+  /* Acceleration Y-Axis */ accelerationY = imu.GetAccelY().value() * deltaTime;
   /* Velocity X-Axis */ velocityX = velocityX + accelerationX;
   /* Velocty Y-Axis */ velocityY = velocityY + accelerationY;
   /* Position X-Axis */ positionX = positionX + velocityX;
