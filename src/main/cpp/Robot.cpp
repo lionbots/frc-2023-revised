@@ -142,7 +142,7 @@ void Robot::TeleopPeriodic() {
   // New beginning time
   begin = end;
   // Print delta time
-  fmt::print("Delta Time: {}\n", deltaTime);
+  //fmt::print("Delta Time: {}\n", deltaTime);
 
   //DRIVE SYSTEM
   if (joyZAxis == 0 && joyZAxis == 0) {
