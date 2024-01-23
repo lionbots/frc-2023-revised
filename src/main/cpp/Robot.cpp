@@ -65,12 +65,12 @@ auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(differenc
 
 //IMU
 frc::ADIS16470_IMU imu{};
-/* Acceleration X-Axis */ double accelerationX = imu.GetAccelX().value() * deltaTime;
-/* Acceleration Y-Axis */ double accelerationY = imu.GetAccelY().value() * deltaTime;
-/* Velocity X-Axis */ double velocityX = velocityX + accelerationX;
-/* Velocty Y-Axis */ double velocityY = velocityY + accelerationY;
-/* Position X-Axis */ double positionX = positionX + velocityX;
-/* Position Y-Axis */ double positionY = positionY + velocityY;
+/* Acceleration X-Axis */ double accelerationX = 0;
+/* Acceleration Y-Axis */ double accelerationY = 0;
+/* Velocity X-Axis */ double velocityX = 0;
+/* Velocty Y-Axis */ double velocityY = 0;
+/* Position X-Axis */ double positionX = 0;
+/* Position Y-Axis */ double positionY = 0;
 /* Ticks since last print */ int ticks = 0;
 
 
@@ -125,7 +125,10 @@ void Robot::AutonomousPeriodic() {
   }
 }
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() {
+  //Reset the values for IMU to 0
+  imu.Reset();
+}
 
 void Robot::TeleopPeriodic() {
   // CONTROL DEFINITION
@@ -168,7 +171,7 @@ void Robot::TeleopPeriodic() {
 
   //IMU
   /* Acceleration X-Axis */ accelerationX = imu.GetAccelX().value() * deltaTime;
-  /* Acceleration Y-Axis */ accelerationY = imu.GetAccelY().value() * deltaTime;
+  /* Acceleration Y-Axis */ accelerationY = imu.GetAccelZ().value() * deltaTime;
   /* Velocity X-Axis */ velocityX = velocityX + accelerationX;
   /* Velocty Y-Axis */ velocityY = velocityY + accelerationY;
   /* Position X-Axis */ positionX = positionX + velocityX;
@@ -177,10 +180,10 @@ void Robot::TeleopPeriodic() {
   //Increases ticks by 1 every 20ms
   ticks++;
   //Every 10 ticks it will print acceleration, velocity, and position and resets ticks
-  if(ticks == 10) {
+  //if(ticks == 0) {
     fmt::print("[{}, {}, {}, {}, {}, {}]\n", accelerationX, accelerationY, velocityX, velocityY, positionX, positionY);
-    ticks = 0;
-  }
+  //  ticks = 0;
+  //}
 
   //DRIVE SYSTEM
   if (joyZAxis == 0 && joyZAxis == 0) {
