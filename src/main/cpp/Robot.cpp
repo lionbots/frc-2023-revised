@@ -23,6 +23,8 @@
 //For the intake and scoring
 #include <rev/CANSparkMax.h>
 #include <rev/CANSparkMaxLowLevel.h>
+//Chrono
+#include <chrono>
 //For the IMU
 #include <frc/ADIS16470_IMU.h>
 //Units Library
@@ -51,6 +53,9 @@ frc::Joystick joystickController{0};
 // Pro controls
 frc::XboxController driveController{1};
 frc::XboxController manipulatorController{2};
+
+// Clock
+auto begin = std::chrono::high_resolution_clock::now();
 
 //IMU
 frc::ADIS16470_IMU imu{};
@@ -144,6 +149,17 @@ void Robot::TeleopPeriodic() {
   /* EJECT       - #1*/ bool joyButtonOne = joystickController.GetRawButton(1);
   /* MAX EJECT   - #3*/ bool joyButtonThree = joystickController.GetRawButton(3);
 
+  // End clock
+  auto end = std::chrono::high_resolution_clock::now();
+  // Difference in time
+  auto difference = end - begin;
+  // Delta Time
+  auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
+  // New beginning time
+  begin = end;
+  // Print delta time
+  //fmt::print("Delta Time: {}\n", deltaTime);
+
   //IMU
   /* Acceleration X-Axis */ accelerationX = imu.GetAccelX().value() * 3.280839895;
   /* Acceleration Y-Axis */ accelerationY = imu.GetAccelY().value() * 3.280839895;
@@ -161,7 +177,7 @@ void Robot::TeleopPeriodic() {
   }
 
   //DRIVE SYSTEM
-  if (!(joyZAxis > 0.05 || joyZAxis < 0.05 || joyYAxis > 0.05 || joyYAxis < 0.)) {
+  if (joyZAxis == 0 && joyZAxis == 0) {
     // PRO CONTROL SCHEME
     // Drive System
     // Foward to the right & left
@@ -194,15 +210,15 @@ void Robot::TeleopPeriodic() {
   // Arm
   if (manipAButton || joyButtonFive) {
     if (armSp < 0.3) {
-        armSp += 0.005;
+        armSp +=0.005;
         arm.Set(armSp);
       } else {
         arm.Set(armSp);
       }
-  } else if (manipBButton || joyButtonThree) {
+  } else if (manipBButton || joyButtonTen) {
     if (armSp > -0.3) {
         armSp -= 0.005;
-        arm.Set(armSp);
+        arm.Set(armSp); 
       } else {
         arm.Set(armSp);
       }
