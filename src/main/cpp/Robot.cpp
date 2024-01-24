@@ -52,13 +52,16 @@ frc::XboxController driveController{1};
 frc::XboxController manipulatorController{2};
 
 // Accelerometer
-frc::BuiltInAccelerometer accelerometer(frc::BuiltInAccelerometer kRange_8G);
+frc::BuiltInAccelerometer accelerometer(frc::BuiltInAccelerometer::kRange_8G);
 
+//Conversion number from G-Forces to meters per second squared
+double metersConversionNumber = 9.80665;
 
+/* Acceleration X-Axis */ double accelerationX = 0;
+/* Acceleration Y-Axis */ double accelerationY = 0;
 
 // Clock
 auto begin = std::chrono::high_resolution_clock::now();
-
 // End clock
 auto end = std::chrono::high_resolution_clock::now();
 // Difference in time
@@ -146,6 +149,10 @@ void Robot::TeleopPeriodic() {
   /* INTAKE      - #2*/ bool joyButtonTwo = joystickController.GetRawButton(2);
   /* EJECT       - #1*/ bool joyButtonOne = joystickController.GetRawButton(1);
   /* MAX EJECT   - #3*/ bool joyButtonThree = joystickController.GetRawButton(3);
+
+  // Accelerometer
+  /* Acceleration X-Axis */ accelerationX = (accelerometer.GetX() * metersConversionNumber) * deltaTime;
+  /* Acceleration Y-Axis */ accelerationY = (accelerometer.GetY() * metersConversionNumber) * deltaTime;
 
   // End clock
   end = std::chrono::high_resolution_clock::now();
