@@ -24,6 +24,8 @@
 #include <rev/CANSparkMaxLowLevel.h>
 //Chrono
 #include <chrono>
+//RoboRIO accelerometer
+#include <frc/BuiltInAccelerometer.h>
 
 // Drive system
 ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{4};
@@ -48,6 +50,11 @@ frc::Joystick joystickController{0};
 // Pro controls
 frc::XboxController driveController{1};
 frc::XboxController manipulatorController{2};
+
+// Accelerometer
+frc::BuiltInAccelerometer accelerometer(frc::BuiltInAccelerometer kRange_8G);
+
+
 
 // Clock
 auto begin = std::chrono::high_resolution_clock::now();
