@@ -54,9 +54,7 @@ frc::XboxController manipulatorController{2};
 // Accelerometer
 frc::BuiltInAccelerometer accelerometer(frc::BuiltInAccelerometer::kRange_8G);
 
-//Conversion number from G-Forces to meters per second squared
-double metersConversionNumber = 9.80665;
-
+/*Conversion number from G-Forces to meters per second squared */ const double metersConversionNumber = 9.80665;
 /* Acceleration X-Axis */ double accelerationX = 0;
 /* Acceleration Y-Axis */ double accelerationY = 0;
 
