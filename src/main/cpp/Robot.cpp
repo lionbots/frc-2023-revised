@@ -57,6 +57,7 @@ frc::BuiltInAccelerometer accelerometer(frc::BuiltInAccelerometer::kRange_8G);
 /*Conversion number from G-Forces to meters per second squared */ const double metersConversionNumber = 9.80665;
 /* Acceleration X-Axis */ double accelerationX = 0;
 /* Acceleration Y-Axis */ double accelerationY = 0;
+/* Ticks since last print */ int ticks = 0;
 
 // Clock
 auto begin = std::chrono::high_resolution_clock::now();
@@ -148,10 +149,7 @@ void Robot::TeleopPeriodic() {
   /* EJECT       - #1*/ bool joyButtonOne = joystickController.GetRawButton(1);
   /* MAX EJECT   - #3*/ bool joyButtonThree = joystickController.GetRawButton(3);
 
-  // Accelerometer
-  /* Acceleration X-Axis */ accelerationX = (accelerometer.GetX() * metersConversionNumber) * deltaTime;
-  /* Acceleration Y-Axis */ accelerationY = (accelerometer.GetY() * metersConversionNumber) * deltaTime;
-
+  // CLOCK
   // End clock
   end = std::chrono::high_resolution_clock::now();
   // Difference in time
@@ -162,6 +160,17 @@ void Robot::TeleopPeriodic() {
   begin = end;
   // Print delta time
   //fmt::print("Delta Time: {}\n", deltaTime);
+
+  // ACCELEROMETER
+  /* Acceleration X-Axis */ accelerationX = (accelerometer.GetX() * metersConversionNumber) * deltaTime;
+  /* Acceleration Y-Axis */ accelerationY = (accelerometer.GetY() * metersConversionNumber) * deltaTime;
+
+  // Increases ticks by one
+  ticks++;
+  // Print acceleration
+  if (ticks == 10) {
+    fmt::print("[{}, {}]", accelerationX, accelerationY);
+  }
 
   //DRIVE SYSTEM
   if (joyZAxis == 0 && joyZAxis == 0) {
