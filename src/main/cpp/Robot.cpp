@@ -6,6 +6,7 @@
 
 #include <fmt/core.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <fmt/format.h>
 //For the Xbox Controller
 #include <frc/XboxController.h>
 //For regular Joystick
