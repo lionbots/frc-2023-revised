@@ -163,11 +163,10 @@ void Robot::TeleopPeriodic() {
   // Difference in time
   difference = end - begin;
   // Delta Time
-  deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
+  deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count();
   // New beginning time
   begin = end;
   // Print delta time
-  //fmt::print("Delta Time: {}\n", deltaTime);
 
   //IMU
   /* Acceleration X-Axis */ accelerationX = imu.GetAccelX().value() * deltaTime;
@@ -180,8 +179,9 @@ void Robot::TeleopPeriodic() {
   //Increases ticks by 1 every 20ms
   ticks++;
   //Every 10 ticks it will print acceleration, velocity, and position and resets ticks
-  if(ticks == 0) {
-    fmt::print("[{}, {}, {}, {}, {}, {}]\n", accelerationX, accelerationY, velocityX, velocityY, positionX, positionY);
+  if(ticks == 10) {
+    //fmt::print("[{}, {}, {}, {}, {}, {}]\n", accelerationX, accelerationY, velocityX, velocityY, positionX, positionY);
+    fmt::print("Delta Time: {}\n", deltaTime);
     ticks = 0;
   }
 
