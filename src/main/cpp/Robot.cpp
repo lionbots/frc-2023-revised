@@ -170,6 +170,7 @@ void Robot::TeleopPeriodic() {
   // Print acceleration
   if (ticks == 10) {
     fmt::print("[{}, {}]", accelerationX, accelerationY);
+    ticks = 0;
   }
 
   //DRIVE SYSTEM
