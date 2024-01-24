@@ -52,6 +52,13 @@ frc::XboxController manipulatorController{2};
 // Clock
 auto begin = std::chrono::high_resolution_clock::now();
 
+// End clock
+auto end = std::chrono::high_resolution_clock::now();
+// Difference in time
+auto difference = end - begin;
+// Delta Time
+auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
+
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
@@ -134,11 +141,11 @@ void Robot::TeleopPeriodic() {
   /* MAX EJECT   - #3*/ bool joyButtonThree = joystickController.GetRawButton(3);
 
   // End clock
-  auto end = std::chrono::high_resolution_clock::now();
+  end = std::chrono::high_resolution_clock::now();
   // Difference in time
-  auto difference = end - begin;
+  difference = end - begin;
   // Delta Time
-  auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
+  deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
   // New beginning time
   begin = end;
   // Print delta time
