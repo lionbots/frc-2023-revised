@@ -57,7 +57,6 @@ frc::BuiltInAccelerometer accelerometer(frc::BuiltInAccelerometer::kRange_8G);
 /*Conversion number from G-Forces to meters per second squared */ const double metersConversionNumber = 9.80665;
 /* Acceleration X-Axis */ double accelerationX = 0;
 /* Acceleration Y-Axis */ double accelerationY = 0;
-/* Ticks since last print */ int ticks = 0;
 
 // Clock
 auto begin = std::chrono::high_resolution_clock::now();
@@ -165,13 +164,8 @@ void Robot::TeleopPeriodic() {
   /* Acceleration X-Axis */ accelerationX = (accelerometer.GetX() * metersConversionNumber) * deltaTime;
   /* Acceleration Y-Axis */ accelerationY = (accelerometer.GetY() * metersConversionNumber) * deltaTime;
 
-  // Increases ticks by one
-  ticks++;
   // Print acceleration
-  if (ticks == 10) {
-    fmt::print("[{}, {}]", accelerationX, accelerationY);
-    ticks = 0;
-  }
+  fmt::print("[{}, {}]", accelerationX, accelerationY);
 
   //DRIVE SYSTEM
   if (joyZAxis == 0 && joyZAxis == 0) {
