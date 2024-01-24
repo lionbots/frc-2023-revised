@@ -128,6 +128,7 @@ void Robot::AutonomousPeriodic() {
 void Robot::TeleopInit() {
   //Reset the values for IMU to 0
   imu.Reset();
+  imu.Calibrate();
 }
 
 void Robot::TeleopPeriodic() {
@@ -163,7 +164,7 @@ void Robot::TeleopPeriodic() {
   // Difference in time
   difference = end - begin;
   // Delta Time
-  deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count();
+  deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
   // New beginning time
   begin = end;
   // Print delta time
@@ -181,7 +182,8 @@ void Robot::TeleopPeriodic() {
   //Every 10 ticks it will print acceleration, velocity, and position and resets ticks
   if(ticks == 10) {
     //fmt::print("[{}, {}, {}, {}, {}, {}]\n", accelerationX, accelerationY, velocityX, velocityY, positionX, positionY);
-    fmt::print("Delta Time: {}\n", deltaTime);
+    fmt::print("[{}, {}]\n", accelerationX, accelerationY);
+    //fmt::print("Delta Time: {}\n", deltaTime);
     ticks = 0;
   }
 
