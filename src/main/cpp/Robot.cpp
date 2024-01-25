@@ -60,8 +60,10 @@ auto begin = std::chrono::high_resolution_clock::now();
 auto end = std::chrono::high_resolution_clock::now();
 // Difference in time
 auto difference = end - begin;
-// Delta Time
-auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
+// Delta Time in milliseconds
+auto msDeltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count();
+// Delta Time in seconds
+double secondsDeltaTime = (double) msDeltaTime / 1000;
 
 //IMU
 frc::ADIS16470_IMU imu{};
@@ -163,19 +165,22 @@ void Robot::TeleopPeriodic() {
   end = std::chrono::high_resolution_clock::now();
   // Difference in time
   difference = end - begin;
-  // Delta Time
-  deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
+  // Delta Time in milliseconds
+  auto msDeltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count();
+  // Delta Time in seconds
+  double secondsDeltaTime = (double) msDeltaTime / 1000;
   // New beginning time
   begin = end;
   // Print delta time
 
+
   //IMU
-  /* Acceleration X-Axis */ accelerationX = imu.GetAccelX().value() * deltaTime;
-  /* Acceleration Y-Axis */ accelerationY = imu.GetAccelY().value() * deltaTime;
-  /* Velocity X-Axis */ velocityX = velocityX + accelerationX;
-  /* Velocty Y-Axis */ velocityY = velocityY + accelerationY;
-  /* Position X-Axis */ positionX = positionX + velocityX;
-  /* Position Y-Axis */ positionY = positionY + velocityY;
+  /* Acceleration X-Axis */ accelerationX = imu.GetAccelX().value() * secondsDeltaTime;
+  /* Acceleration Y-Axis */ accelerationY = imu.GetAccelY().value() * secondsDeltaTime;
+  /* Velocity X-Axis */ velocityX += accelerationX;
+  /* Velocty Y-Axis */ velocityY += accelerationY;
+  /* Position X-Axis */ positionX += velocityX;
+  /* Position Y-Axis */ positionY += velocityY;
 
   //Increases ticks by 1 every 20ms
   ticks++;
