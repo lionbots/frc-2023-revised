@@ -184,11 +184,10 @@ void Robot::TeleopPeriodic() {
 
   //Increases ticks by 1 every 20ms
   ticks++;
-  //Every 10 ticks it will print acceleration, velocity, and position and resets ticks
+  //Every 10 ticks it will print delta time, acceleration, velocity, and position and resets ticks
   if(ticks == 10) {
-    //fmt::print("[{}, {}, {}, {}, {}, {}]\n", accelerationX, accelerationY, velocityX, velocityY, positionX, positionY);
-    fmt::print("[{}, {}]\n", accelerationX, accelerationY);
-    //fmt::print("Delta Time: {}\n", deltaTime);
+    fmt::print("Delta Time: {}\n", secondsDeltaTime);
+    fmt::print("[{}, {}, {}, {}, {}, {}]\n", accelerationX, accelerationY, velocityX, velocityY, positionX, positionY);
     ticks = 0;
   }
 
