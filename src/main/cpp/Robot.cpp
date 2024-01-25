@@ -65,6 +65,9 @@ frc::BuiltInAccelerometer accelerometer(frc::BuiltInAccelerometer::kRange_8G);
 /* Filter for Y-Axis */ frc::LinearFilter<double> Yfilter = frc::LinearFilter<double>::MovingAverage(10);
 /* Filtered X-Acceleration */ double filteredAccelerationX = 0;
 /* Filtered Y-Acceleration */ double filteredAccelerationY = 0;
+/* velocity*/ double velocityX = 0; double velocityY = 0;
+/*position*/ double positionX = 0; double positionY = 0;
+int ticks = 0;
 
 // Clock
 auto begin = std::chrono::high_resolution_clock::now();
@@ -127,7 +130,15 @@ void Robot::AutonomousPeriodic() {
   }
 }
 
-void Robot::TeleopInit() {}
+void Robot::TeleopInit() {
+  filteredAccelerationX = 0;
+  filteredAccelerationY = 0;
+  velocityX = 0;
+  velocityY = 0;
+  positionX = 0;
+  positionY = 0;
+  ticks = 0;
+}
 
 void Robot::TeleopPeriodic() {
   // CONTROL DEFINITION
@@ -170,16 +181,19 @@ void Robot::TeleopPeriodic() {
   begin = end;
   // Print delta time
   fmt::print("Delta Time: {}\n", secondsDeltaTime);
-
+  
   // ACCELEROMETER
   /* Acceleration X-Axis */ accelerationX = accelerometer.GetX() * secondsDeltaTime;
   /* Acceleration Y-Axis */ accelerationY = accelerometer.GetY() * secondsDeltaTime;
-  /* Filtered X-Acceleration */ filteredAccelerationX = Xfilter.Calculate(accelerationX);
-  /* Filtered Y-Acceleration */ filteredAccelerationY = Yfilter.Calculate(accelerationY);
-  
+  /* Filtered X-Acceleration */ filteredAccelerationX = ((round(Xfilter.Calculate(accelerationX) * 10000))/10000) * metersConversionNumber;
+  /* Filtered Y-Acceleration */ filteredAccelerationY = ((round(Yfilter.Calculate(accelerationY) * 10000))/10000) * metersConversionNumber;
+  velocityX += filteredAccelerationX;
+  velocityY += filteredAccelerationY;
+  positionX += velocityX;
+  positionY += velocityY;
 
   // Print acceleration
-  fmt::print("Acceleration X: {}, Acceleration Y: {}\n", accelerationX, accelerationY);
+  fmt::print("Position X: {}, Position Y: {}\n", positionX, positionY);
 
   //DRIVE SYSTEM
   if (joyZAxis == 0 && joyZAxis == 0) {
