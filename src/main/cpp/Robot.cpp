@@ -73,7 +73,8 @@ auto end = std::chrono::high_resolution_clock::now();
 // Difference in time
 auto difference = end - begin;
 // Delta Time
-auto deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
+auto msDeltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count();
+double secondsDeltaTime = msDeltaTime / 1000;
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
@@ -161,21 +162,24 @@ void Robot::TeleopPeriodic() {
   end = std::chrono::high_resolution_clock::now();
   // Difference in time
   difference = end - begin;
-  // Delta Time
-  deltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count() / 1000;
+  // Delta Time in milliseconds
+  msDeltaTime = std::chrono::duration_cast<std::chrono::milliseconds>(difference).count();
+  // Delta Time in seconds
+  secondsDeltaTime = (double) msDeltaTime / 1000;
   // New beginning time
   begin = end;
   // Print delta time
-  //fmt::print("Delta Time: {}\n", deltaTime);
+  fmt::print("Delta Time: {}\n", secondsDeltaTime);
 
   // ACCELEROMETER
-  /* Acceleration X-Axis */ accelerationX = (accelerometer.GetX() * metersConversionNumber) * deltaTime;
-  /* Acceleration Y-Axis */ accelerationY = (accelerometer.GetY() * metersConversionNumber) * deltaTime;
+  /* Acceleration X-Axis */ accelerationX = accelerometer.GetX() * secondsDeltaTime;
+  /* Acceleration Y-Axis */ accelerationY = accelerometer.GetY() * secondsDeltaTime;
   /* Filtered X-Acceleration */ filteredAccelerationX = Xfilter.Calculate(accelerationX);
   /* Filtered Y-Acceleration */ filteredAccelerationY = Yfilter.Calculate(accelerationY);
+  
 
   // Print acceleration
-  fmt::print("Acceleration X: {}, Acceleration Y: {}\n", filteredAccelerationX, filteredAccelerationY);
+  fmt::print("Acceleration X: {}, Acceleration Y: {}\n", accelerationX, accelerationY);
 
   //DRIVE SYSTEM
   if (joyZAxis == 0 && joyZAxis == 0) {
