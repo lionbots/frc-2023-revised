@@ -29,6 +29,8 @@
 #include <frc/ADIS16470_IMU.h>
 //Units Library
 #include <units/base.h>
+//Linear filter
+#include <frc/filter/LinearFilter.h>
 
 // Drive system
 ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{4};
