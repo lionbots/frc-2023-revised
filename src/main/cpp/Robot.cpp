@@ -175,7 +175,7 @@ void Robot::TeleopPeriodic() {
   /* Filtered Y-Acceleration */ filteredAccelerationY = Yfilter.Calculate(accelerationY);
 
   // Print acceleration
-  fmt::print("Acceleration X: {}, Acceleration Y: {}\n", accelerationX, accelerationY);
+  fmt::print("Acceleration X: {}, Acceleration Y: {}\n", filteredAccelerationX, filteredAccelerationY);
 
   //DRIVE SYSTEM
   if (joyZAxis == 0 && joyZAxis == 0) {
