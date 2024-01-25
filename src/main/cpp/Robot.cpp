@@ -27,6 +27,8 @@
 #include <chrono>
 //RoboRIO accelerometer
 #include <frc/BuiltInAccelerometer.h>
+//Linear filter
+#include <frc/filter/LinearFilter.h>
 
 // Drive system
 ctre::phoenix::motorcontrol::can::WPI_TalonSRX FRMotor{4};
@@ -55,9 +57,14 @@ frc::XboxController manipulatorController{2};
 // Accelerometer
 frc::BuiltInAccelerometer accelerometer(frc::BuiltInAccelerometer::kRange_8G);
 
+
 /*Conversion number from G-Forces to meters per second squared */ const double metersConversionNumber = 9.80665;
 /* Acceleration X-Axis */ double accelerationX = 0;
 /* Acceleration Y-Axis */ double accelerationY = 0;
+/* Filter for X-Axis */ frc::LinearFilter<double> Xfilter = frc::LinearFilter<double>::MovingAverage(10);
+/* Filter for Y-Axis */ frc::LinearFilter<double> Yfilter = frc::LinearFilter<double>::MovingAverage(10);
+/* Filtered X-Acceleration */ double filteredAccelerationX = 0;
+/* Filtered Y-Acceleration */ double filteredAccelerationY = 0;
 
 // Clock
 auto begin = std::chrono::high_resolution_clock::now();
@@ -164,6 +171,8 @@ void Robot::TeleopPeriodic() {
   // ACCELEROMETER
   /* Acceleration X-Axis */ accelerationX = (accelerometer.GetX() * metersConversionNumber) * deltaTime;
   /* Acceleration Y-Axis */ accelerationY = (accelerometer.GetY() * metersConversionNumber) * deltaTime;
+  /* Filtered X-Acceleration */ filteredAccelerationX = Xfilter.Calculate(accelerationX);
+  /* Filtered Y-Acceleration */ filteredAccelerationY = Yfilter.Calculate(accelerationY);
 
   // Print acceleration
   fmt::print("Acceleration X: {}, Acceleration Y: {}\n", accelerationX, accelerationY);
