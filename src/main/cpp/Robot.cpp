@@ -166,7 +166,7 @@ void Robot::TeleopPeriodic() {
   /* Acceleration Y-Axis */ accelerationY = (accelerometer.GetY() * metersConversionNumber) * deltaTime;
 
   // Print acceleration
-  fmt::print("[{}, {}]", accelerationX, accelerationY);
+  fmt::print("Acceleration X: {}, Acceleration Y: {}\n", accelerationX, accelerationY);
 
   //DRIVE SYSTEM
   if (joyZAxis == 0 && joyZAxis == 0) {
