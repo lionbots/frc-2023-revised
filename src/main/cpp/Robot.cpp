@@ -71,6 +71,10 @@ double secondsDeltaTime = (double) msDeltaTime / 1000;
 frc::ADIS16470_IMU imu{};
 /* Acceleration X-Axis */ double accelerationX = 0;
 /* Acceleration Y-Axis */ double accelerationY = 0;
+/* Filter for X-Axis Acceleration */ frc::LinearFilter<double> Xfilter = frc::LinearFilter<double>::MovingAverage(10);
+/* Filter for Y-Axis Accceleration */ frc::LinearFilter<double> Yfilter = frc::LinearFilter<double>::MovingAverage(10);
+/* Filtered X-Acceleration */ double filteredAccelerationX = 0;
+/* Filtered Y-Acceleration */ double filteredAccelerationY = 0;
 /* Velocity X-Axis */ double velocityX = 0;
 /* Velocty Y-Axis */ double velocityY = 0;
 /* Position X-Axis */ double positionX = 0;
@@ -179,8 +183,10 @@ void Robot::TeleopPeriodic() {
   //IMU
   /* Acceleration X-Axis */ accelerationX = imu.GetAccelX().value() * secondsDeltaTime;
   /* Acceleration Y-Axis */ accelerationY = imu.GetAccelY().value() * secondsDeltaTime;
-  /* Velocity X-Axis */ velocityX += accelerationX;
-  /* Velocty Y-Axis */ velocityY += accelerationY;
+  /* Filtered X-Acceleration */ filteredAccelerationX = Xfilter.Calculate(accelerationX);
+  /* Filtered Y-Acceleration */ filteredAccelerationY = Yfilter.Calculate(accelerationY);
+  /* Velocity X-Axis */ velocityX += filteredAccelerationX;
+  /* Velocty Y-Axis */ velocityY += filteredAccelerationY;
   /* Position X-Axis */ positionX += velocityX;
   /* Position Y-Axis */ positionY += velocityY;
 
@@ -189,7 +195,7 @@ void Robot::TeleopPeriodic() {
   //Every 10 ticks it will print delta time, acceleration, velocity, and position and resets ticks
   if(ticks == 10) {
     fmt::print("Delta Time: {}\n", secondsDeltaTime);
-    fmt::print("[{}, {}, {}, {}, {}, {}]\n", accelerationX, accelerationY, velocityX, velocityY, positionX, positionY);
+    fmt::print("[{}, {}, {}, {}, {}, {}]\n", filteredAccelerationX, filteredAccelerationY, velocityX, velocityY, positionX, positionY);
     ticks = 0;
   }
 
