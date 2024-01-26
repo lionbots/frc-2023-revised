@@ -134,9 +134,9 @@ void Robot::AutonomousPeriodic() {
 }
 
 void Robot::TeleopInit() {
-  //Reset the values for IMU to 0
+  //Reset the values to IMU to 0
   imu.Reset();
-  imu.Calibrate();
+  //imu.Calibrate();
 }
 
 void Robot::TeleopPeriodic() {
@@ -177,18 +177,18 @@ void Robot::TeleopPeriodic() {
   double secondsDeltaTime = (double) msDeltaTime / 1000;
   // New beginning time
   begin = end;
-  // Print delta time
-
 
   //IMU
   /* Acceleration X-Axis */ accelerationX = imu.GetAccelX().value() * secondsDeltaTime;
   /* Acceleration Y-Axis */ accelerationY = imu.GetAccelY().value() * secondsDeltaTime;
   /* Filtered X-Acceleration */ filteredAccelerationX = Xfilter.Calculate(accelerationX);
   /* Filtered Y-Acceleration */ filteredAccelerationY = Yfilter.Calculate(accelerationY);
-  /* Velocity X-Axis */ velocityX += filteredAccelerationX;
-  /* Velocty Y-Axis */ velocityY += filteredAccelerationY;
-  /* Position X-Axis */ positionX += velocityX;
-  /* Position Y-Axis */ positionY += velocityY;
+  if(((filteredAccelerationX > 0.0006) || (filteredAccelerationX < -0.0006)) || ((filteredAccelerationY > 0.00095) || (filteredAccelerationY < -0.00095))){
+    /* Velocity X-Axis */ velocityX += filteredAccelerationX;
+    /* Velocty Y-Axis */ velocityY += filteredAccelerationY;
+    /* Position X-Axis */ positionX += velocityX;
+    /* Position Y-Axis */ positionY += velocityY;
+  }
 
   //Increases ticks by 1 every 20ms
   ticks++;
