@@ -199,6 +199,7 @@ void Robot::TeleopPeriodic() {
   if(ticks == 10) {
     fmt::print("Delta Time: {}\n", secondsDeltaTime);
     fmt::print("[Acceleration: {}, {}, Velocity: {}, {}, Position: {}, {}]\n", /*filteredAccelerationX, filteredAccelerationY,*/ velocityX, velocityY, positionX, positionY);
+    fmt::print("XYZ Acceleration: {}", xyzAcceleration);
     ticks = 0;
   }
 
