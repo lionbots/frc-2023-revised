@@ -71,6 +71,7 @@ double secondsDeltaTime = (double) msDeltaTime / 1000;
 frc::ADIS16470_IMU imu{};
 /* Acceleration X-Axis */ double accelerationX = 0;
 /* Acceleration Y-Axis */ double accelerationY = 0;
+/* Acceleration Z-Axis */ double accelerationZ = 0;
 // /* Filter for X-Axis Acceleration */ frc::LinearFilter<double> Xfilter = frc::LinearFilter<double>::MovingAverage(10);
 // /* Filter for Y-Axis Accceleration */ frc::LinearFilter<double> Yfilter = frc::LinearFilter<double>::MovingAverage(10);
 // /* Filtered X-Acceleration */ double filteredAccelerationX = 0;
@@ -181,6 +182,7 @@ void Robot::TeleopPeriodic() {
   //IMU
   /* Acceleration X-Axis */ accelerationX = imu.GetAccelX().value() * secondsDeltaTime;
   /* Acceleration Y-Axis */ accelerationY = imu.GetAccelY().value() * secondsDeltaTime;
+  /* Acceleration Z-Axis */ accelerationZ = imu.GetAccelZ().value() * secondsDeltaTime;
   // /* Filtered X-Acceleration */ filteredAccelerationX = Xfilter.Calculate(accelerationX);
   // /* Filtered Y-Acceleration */ filteredAccelerationY = Yfilter.Calculate(accelerationY);
   // if(((filteredAccelerationX > 0.0006) || (filteredAccelerationX < -0.0006)) || ((filteredAccelerationY > 0.00095) || (filteredAccelerationY < -0.00095))){
