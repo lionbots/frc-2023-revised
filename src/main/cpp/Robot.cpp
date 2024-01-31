@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+#include <iostream>
 #include "Robot.h"
 
 #include <fmt/core.h>
@@ -81,7 +81,7 @@ frc::ADIS16470_IMU imu{};
 /* Position X-Axis */ double positionX = 0;
 /* Position Y-Axis */ double positionY = 0;
 /* Ticks since last print */ int ticks = 0;
-
+std::vector<double> xyzAcceleration = {accelerationX, accelerationY, accelerationZ};
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
@@ -191,6 +191,7 @@ void Robot::TeleopPeriodic() {
     /* Position X-Axis */ positionX += velocityX;
     /* Position Y-Axis */ positionY += velocityY;
   // }
+  xyzAcceleration = {accelerationX, accelerationY, accelerationZ};
 
   //Increases ticks by 1 every 20ms
   ticks++;
