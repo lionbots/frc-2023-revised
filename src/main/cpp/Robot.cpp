@@ -78,8 +78,10 @@ frc::ADIS16470_IMU imu{};
 // /* Filtered Y-Acceleration */ double filteredAccelerationY = 0;
 /* Velocity X-Axis */ double velocityX = 0;
 /* Velocty Y-Axis */ double velocityY = 0;
+double velocityZ = 0;
 /* Position X-Axis */ double positionX = 0;
 /* Position Y-Axis */ double positionY = 0;
+double positionZ = 0;
 /* Ticks since last print */ int ticks = 0;
 std::vector<double> xyzAcceleration = {accelerationX, accelerationY, accelerationZ};
 
@@ -87,9 +89,6 @@ void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
   m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
-
-  //Begin new thread for camera processing
-  std::jthread visionThread(VisionThread);
 }
 
 /**
@@ -186,10 +185,12 @@ void Robot::TeleopPeriodic() {
   // /* Filtered X-Acceleration */ filteredAccelerationX = Xfilter.Calculate(accelerationX);
   // /* Filtered Y-Acceleration */ filteredAccelerationY = Yfilter.Calculate(accelerationY);
   // if(((filteredAccelerationX > 0.0006) || (filteredAccelerationX < -0.0006)) || ((filteredAccelerationY > 0.00095) || (filteredAccelerationY < -0.00095))){
-    // /* Velocity X-Axis */ velocityX += filteredAccelerationX;
-    // /* Velocty Y-Axis */ velocityY += filteredAccelerationY;
+     /* Velocity X-Axis */ velocityX += accelerationX;
+     /* Velocty Y-Axis */ velocityY += accelerationY;
+     velocityZ += accelerationZ;
     /* Position X-Axis */ positionX += velocityX;
     /* Position Y-Axis */ positionY += velocityY;
+    positionZ += velocityZ;
   // }
   xyzAcceleration = {accelerationX, accelerationY, accelerationZ};
 
@@ -198,8 +199,9 @@ void Robot::TeleopPeriodic() {
   //Every 10 ticks it will print delta time, acceleration, velocity, and position and resets ticks
   if(ticks == 10) {
     fmt::print("Delta Time: {}\n", secondsDeltaTime);
-    fmt::print("[Acceleration: {}, {}, Velocity: {}, {}, Position: {}, {}]\n", /*filteredAccelerationX, filteredAccelerationY,*/ velocityX, velocityY, positionX, positionY);
-    fmt::print("XYZ Acceleration: {}", xyzAcceleration);
+    fmt::print("[AccelerationX: {}, AccelerationY: {}, AccelerationZ: {}]\n", imu.GetAccelX().value(), imu.GetAccelY().value(), imu.GetAccelZ().value());
+    fmt::print("positionX: {}, positionY: {}, positionZ: {}\n", positionX, positionY, positionZ);
+    //fmt::print("[XYZ Acceleration: {}]", xyzAcceleration);
     ticks = 0;
   }
 
