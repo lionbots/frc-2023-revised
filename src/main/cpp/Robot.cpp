@@ -194,6 +194,7 @@ void Robot::TeleopPeriodic() {
   // }
   xyzAcceleration = {accelerationX, accelerationY, accelerationZ};
 
+
   //Increases ticks by 1 every 20ms
   ticks++;
   //Every 10 ticks it will print delta time, acceleration, velocity, and position and resets ticks
@@ -202,6 +203,7 @@ void Robot::TeleopPeriodic() {
     fmt::print("[AccelerationX: {}, AccelerationY: {}, AccelerationZ: {}]\n", imu.GetAccelX().value(), imu.GetAccelY().value(), imu.GetAccelZ().value());
     fmt::print("positionX: {}, positionY: {}, positionZ: {}\n", positionX, positionY, positionZ);
     //fmt::print("[XYZ Acceleration: {}]", xyzAcceleration);
+
     ticks = 0;
   }
 
